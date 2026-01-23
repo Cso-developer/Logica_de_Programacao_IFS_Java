@@ -16,7 +16,6 @@ public class CadastroDeCPF {
 			switch(opcao) {
 				case 1:{
 					usuarios = cadastrarUsusario(usuarios);
-					contaCPFcadastrados ++;
 					break;
 				}
 				
@@ -31,7 +30,6 @@ public class CadastroDeCPF {
 				}
 				case 4: {
 					apagarUsuario(usuarios);
-					contaCPFcadastrados --;
 					break;
 				}
 				case 5: {
@@ -49,8 +47,6 @@ public class CadastroDeCPF {
 	}
 	
 	public static int menuInicial() {
-		Scanner scanner = new Scanner(System.in);
-		int opcao=0;
 		System.out.println("______________________________________");
 		System.out.println("___________Escolha uma opção__________");
 		System.out.println("----Digite 0- Encerrar----------------");
@@ -60,8 +56,7 @@ public class CadastroDeCPF {
 		System.out.println("----Digite 4- Excluir cadastrado------");
 		System.out.println("----Digite 5- Exibir todos -----------");
 		System.out.println("______________________________________");
-		opcao= scanner.nextInt();
-		return opcao;
+		return Integer.parseInt(lerDados(""));
 	}
 	public static String [][] cadastrarUsusario(String usuarios[][]) {
 		if(!existeEspacoNaBaseDedados(usuarios)) {
@@ -72,7 +67,7 @@ public class CadastroDeCPF {
 		String cpf =lerDados("Digite o CPF");
 		
 		if (!cpfValido(cpf)){
-			System.out.println("CPF inválido digite um novo cpf");
+			System.out.println("CPF inválido digite um nuvo cpf");
 			return usuarios;
 		}
 		
@@ -92,7 +87,7 @@ public class CadastroDeCPF {
 				break;
 			}
 		}
-		
+		contaCPFcadastrados ++;
 		return usuarios;
 	}
 	public static boolean existeEspacoNaBaseDedados(String usuarios[][]) {
@@ -101,6 +96,7 @@ public class CadastroDeCPF {
 				
 	}
 	public static boolean cpfValido(String cpf) {
+		if (cpf.length() < 11) return false;
 		boolean digitoVerificador1 = validarVerificador1(cpf);
 		boolean digitoVerificador2 = validarVerificador2(cpf);
 		boolean cpfValido= false ;
@@ -160,7 +156,7 @@ public class CadastroDeCPF {
 		Scanner scanner = new Scanner(System.in);
 		String input;
 		System.out.println(mensagem);
-		input = scanner.next();
+		input = scanner.nextLine();
 		
 		return input;
 	}
@@ -180,24 +176,19 @@ public class CadastroDeCPF {
 			String[] usuario = usuarios[i];
 			if(usuario[0] != null && usuario[0].equals(cpf)) {
 				System.out.printf("cpf: %s nome: %s \n", usuario[0],usuario[1]);
-				break;
-			}else {
-				System.out.println("usuario não cadastrado");
-				break;
+				return;
 			}
 		}
-		
+		System.out.println("usuario não cadastrado");
 	}
 	public static void editarUsuario(String usuarios[][]) {
-		Scanner scanner = new Scanner(System.in);
 				
 		String cpf =lerDados("Digite o cpf do usuario que deseja editar o nome");
 		for (int i=0;i < usuarios.length;i++) {
 			String[] usuario = usuarios[i];
 			if(cpf.equals(usuario[0])) {
 				System.out.printf("o nome cadastrado para este CPF é %s\n",usuario[1]);
-				System.out.println("Qaul nome irá substitui-lo?");
-				usuarios[i][1] = scanner.next();
+				usuarios[i][1] = lerDados("Qual nome irá subistitui-lo");
 			}
 		}
 	}
@@ -214,6 +205,7 @@ public class CadastroDeCPF {
 				if (deletar.equals("s")) {
 					usuarios[i][1]= null;
 					usuarios[i][0]= null;
+					contaCPFcadastrados --;
 				}
 			}
 		}
