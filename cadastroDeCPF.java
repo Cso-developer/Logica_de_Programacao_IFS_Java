@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 
 public class CadastroDeCPF {
-	
+	static int contaCPFcadastrados = 0; 
 	
 	public static void main(String[] args) {
 		int opcao=0;
@@ -16,6 +16,7 @@ public class CadastroDeCPF {
 			switch(opcao) {
 				case 1:{
 					usuarios = cadastrarUsusario(usuarios);
+					contaCPFcadastrados ++;
 					break;
 				}
 				
@@ -30,6 +31,7 @@ public class CadastroDeCPF {
 				}
 				case 4: {
 					apagarUsuario(usuarios);
+					contaCPFcadastrados --;
 					break;
 				}
 				case 5: {
@@ -70,7 +72,7 @@ public class CadastroDeCPF {
 		String cpf =lerDados("Digite o CPF");
 		
 		if (!cpfValido(cpf)){
-			System.out.println("CPF inválido");
+			System.out.println("CPF inválido digite um novo cpf");
 			return usuarios;
 		}
 		
@@ -81,11 +83,12 @@ public class CadastroDeCPF {
 		
 		String nome = lerDados("Digite o nome");
 		for(int i = 0;i<usuarios.length;i++) {
-			String[] usuario = usuarios[i];
+			String usuario[] = usuarios[i];
 			if(usuario[0] == null) {
 				usuarios[i] = new String[2];
 				usuarios[i][0]=cpf;
 				usuarios[i][1]=nome;
+	
 				break;
 			}
 		}
@@ -93,8 +96,9 @@ public class CadastroDeCPF {
 		return usuarios;
 	}
 	public static boolean existeEspacoNaBaseDedados(String usuarios[][]) {
-		int tamanhoMaximo = 3;
-		return usuarios.length == tamanhoMaximo;
+		int maximoArmazenamento = 3;
+		return contaCPFcadastrados < maximoArmazenamento;
+				
 	}
 	public static boolean cpfValido(String cpf) {
 		boolean digitoVerificador1 = validarVerificador1(cpf);
@@ -120,10 +124,10 @@ public class CadastroDeCPF {
 			
 		}
 		somaMultiplicacao = somaMultiplicacao %11;
-		if(somaMultiplicacao < 2 && cpf.charAt(9)==0) {
+		if(somaMultiplicacao < 2 && Character.getNumericValue(cpf.charAt(9))==0) {
 			return true;
 			
-		}else if(somaMultiplicacao > 2 && (11-somaMultiplicacao )== Character.getNumericValue(cpf.charAt(9))){
+		}else if(somaMultiplicacao >= 2 && (11-somaMultiplicacao )== Character.getNumericValue(cpf.charAt(9))){
 			return true;
 		}else {
 			return false;
@@ -143,10 +147,10 @@ public class CadastroDeCPF {
 			
 		}
 		somaMultiplicacao = somaMultiplicacao %11;
-		if(somaMultiplicacao < 2 && cpf.charAt(9)==0) {
+		if(somaMultiplicacao < 2 && Character.getNumericValue(cpf.charAt(10))==0) {
 			return true;
 			
-		}else if(somaMultiplicacao > 2 && (11-somaMultiplicacao )== Character.getNumericValue(cpf.charAt(10))){
+		}else if(somaMultiplicacao >= 2 && (11-somaMultiplicacao )== Character.getNumericValue(cpf.charAt(10))){
 			return true;
 		}else {
 			return false;
@@ -175,7 +179,7 @@ public class CadastroDeCPF {
 		for(int i = 0;i < usuarios.length;i++) {
 			String[] usuario = usuarios[i];
 			if(usuario[0] != null && usuario[0].equals(cpf)) {
-				System.out.printf("cpf: %s nome: %s ", usuario[0],usuario[1]);
+				System.out.printf("cpf: %s nome: %s \n", usuario[0],usuario[1]);
 				break;
 			}else {
 				System.out.println("usuario não cadastrado");
@@ -217,18 +221,23 @@ public class CadastroDeCPF {
 		
 	
 	}
-	public static String exibirTodosUsuarios(String usuarios[][] ) {
+	public static void exibirTodosUsuarios(String usuarios[][] ) {
 		
 		for(int i =0; i< usuarios.length;i++) {
 			String[] usuario = usuarios[i];
 			int contaNulos =0;
-			if(usuario[i] != null) {
-				System.out.println(usuario[i]);
+			if(usuario[0] != null) {
+				System.out.printf("CPF ->%s",usuario[0]);
+				System.out.printf(" Nome->%s\n",usuario[1]);
 				
 			}else {
-				
+				contaNulos ++;
+			}
+			
+			if( contaNulos ==3 ){
+				System.out.println("Nenhum cadastro encontrado!!");
 			}
 		}
-		return "";
+		
 	}
 }
